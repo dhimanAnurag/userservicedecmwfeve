@@ -1,5 +1,7 @@
 package com.scaler.userservicedecmwfeve.services;
 
-public interface UserService {
+import com.scaler.userservicedecmwfeve.models.User;
 
+public interface UserService {
+    User addNewProduct(User user)   ;
 }
