@@ -1,7 +1,10 @@
 package com.scaler.userservicedecmwfeve.services;
 
-import com.scaler.userservicedecmwfeve.models.User;
+import com.scaler.userservicedecmwfeve.models.Users;
+
+import java.util.List;
 
 public interface UserService {
-    User addNewProduct(User user)   ;
+    Users addNewProduct(Users users);
+    List<Users> getAllUsers();
 }
