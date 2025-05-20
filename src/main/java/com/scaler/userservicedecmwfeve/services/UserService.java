@@ -7,4 +7,5 @@ import java.util.List;
 public interface UserService {
     Users addNewProduct(Users users);
     List<Users> getAllUsers();
+    Users getUserById(Long id);
 }

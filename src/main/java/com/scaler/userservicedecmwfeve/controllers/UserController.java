@@ -1,5 +1,6 @@
 package com.scaler.userservicedecmwfeve.controllers;
 
+import com.scaler.userservicedecmwfeve.exceptions.UserNotExistsException;
 import com.scaler.userservicedecmwfeve.models.Users;
 import com.scaler.userservicedecmwfeve.services.UserService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -30,6 +31,12 @@ public class UserController {
         );
         return allUsers;
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Users> getUserById(@PathVariable("id") long id) throws UserNotExistsException {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+    }
+
 
 
 }
