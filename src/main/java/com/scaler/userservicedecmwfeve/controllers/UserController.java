@@ -16,10 +16,10 @@ import java.util.List;
 public class UserController {
     private UserService userService;
 
-
     public UserController(@Qualifier("mysqlUserService") UserService userService) {
         this.userService = userService;
     }
+
     @PostMapping()
     public Users addNewUser(@RequestBody Users users) {
         return userService.addNewProduct(users);
@@ -37,6 +37,13 @@ public class UserController {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
 
+   @DeleteMapping("/{id}")
+    public ResponseEntity<Users> deleteUserById(@PathVariable("id") long id) throws UserNotExistsException {
+        return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.OK);
+   }
 
-
+    @PutMapping("/{id}")
+    public ResponseEntity<Users> updateUserById(@PathVariable("id") long id, @RequestBody Users users) throws UserNotExistsException {
+        return new ResponseEntity<>(userService.updateUserById(id,users), HttpStatus.OK);
+    }
 }
