@@ -1,49 +1,30 @@
 package com.scaler.userservicedecmwfeve.controllers;
 
-import com.scaler.userservicedecmwfeve.exceptions.UserNotExistsException;
-import com.scaler.userservicedecmwfeve.models.Users;
-import com.scaler.userservicedecmwfeve.services.UserService;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
+import com.scaler.userservicedecmwfeve.models.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private UserService userService;
-
-    public UserController(@Qualifier("mysqlUserService") UserService userService) {
-        this.userService = userService;
+    public User login() {
+        // check if email and password in db
+        // if yes return user
+        // else throw some error
+        return null;
     }
 
-    @PostMapping()
-    public Users addNewUser(@RequestBody Users users) {
-        return userService.addNewProduct(users);
-    }
-    @GetMapping
-    public ResponseEntity<List<Users>> getAllUsers() {
-        ResponseEntity<List<Users>> allUsers = new ResponseEntity<>(
-                userService.getAllUsers(), HttpStatus.OK
-        );
-        return allUsers;
+    public User signUp() {
+        // no need to hash the password for now
+        // just store the password as it is
+        // for now no need to have email  verifiation
+        return null;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Users> getUserById(@PathVariable("id") long id) throws UserNotExistsException {
-        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
-    }
-
-   @DeleteMapping("/{id}")
-    public ResponseEntity<Users> deleteUserById(@PathVariable("id") long id) throws UserNotExistsException {
-        return new ResponseEntity<>(userService.deleteUserById(id), HttpStatus.OK);
-   }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUserById(@PathVariable("id") long id, @RequestBody Users users) throws UserNotExistsException {
-        return new ResponseEntity<>(userService.updateUserById(id,users), HttpStatus.OK);
+    public ResponseEntity<Void> logout() {
+        // delete token if exists -> 200
+        // if it doesn't exist return the 404
+        return null;
     }
 }

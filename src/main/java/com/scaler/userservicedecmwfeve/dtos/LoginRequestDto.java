@@ -3,9 +3,9 @@ package com.scaler.userservicedecmwfeve.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
-public class ExceptionDto {
-    private String message;
-    private String details;
+@Setter
+public class LoginRequestDto {
+    private String email;
+    private String password;
 }
