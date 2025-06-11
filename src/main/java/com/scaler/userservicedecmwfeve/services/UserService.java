@@ -80,4 +80,18 @@ public class UserService {
         tokenRepository.save(tkn);
 
     }
+
+    public User validateToken(String token) {
+        Optional<Token> tkn = tokenRepository.
+                findByValueAndDeletedEqualsAndExpiryAtGreaterThan(token, false, new Date());
+
+        if (tkn.isEmpty()) {
+            return null;
+        }
+
+        // TODO 2: Instead of validating via the DB, as the token is now a JWT
+        // token, validate using JWT
+
+        return tkn.get().getUser();
+    }
 }
