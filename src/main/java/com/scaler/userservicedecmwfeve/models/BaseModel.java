@@ -17,6 +17,7 @@ public class BaseModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private boolean deleted = false;
 
 //    @CreationTimestamp
 //    @Column(updatable = false)
