@@ -27,19 +27,25 @@ public class UserController {
         // else throw some error
         return userService.login(request.getEmail(), request.getPassword());
     }
+
     @PostMapping("/signup")
-    public User signUp(@RequestBody SignUpRequestDto request) {
-        // no need to hash the password for now
-        // just store the password as it is
-        // for now no need to have email  verifiation
+    public UserDto signUp(@RequestBody SignUpRequestDto request) {
+        // no need to hash password for now
+        // just store user as is in the db
+        // for now no need to have email verification either
         String email = request.getEmail();
         String password = request.getPassword();
-        String name = request.getName();
+        String name = request.getName();;
 
-        return userService.signUp(name, email, password);
+
+        return UserDto.from(userService.signUp(name, email, password));
     }
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@RequestBody LogoutRequestDto request) {
+        // delete token if exists -> 200
+        // if doesn't exist give a 404
+
         userService.logout(request.getToken());
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -49,3 +55,5 @@ public class UserController {
         return UserDto.from(userService.validateToken(token));
     }
 }
+
+// Break till 10:35

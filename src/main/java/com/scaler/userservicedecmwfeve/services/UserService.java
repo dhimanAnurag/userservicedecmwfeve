@@ -14,25 +14,32 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
-
-    private TokenRepository tokenRepository;
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private TokenRepository tokenRepository;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenRepository tokenRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public UserService(UserRepository userRepository,
+                       BCryptPasswordEncoder bCryptPasswordEncoder,
+                       TokenRepository tokenRepository) {
         this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenRepository = tokenRepository;
     }
-    public User signUp(String fullName, String email, String password) {
+
+    public User signUp(String fullName,
+                       String email,
+                       String password) {
         User u = new User();
         u.setEmail(email);
         u.setName(fullName);
         u.setHashedPassword(bCryptPasswordEncoder.encode(password));
+
         User user = userRepository.save(u);
+
         return user;
     }
 
@@ -51,6 +58,16 @@ public class UserService {
             return null;
         }
 
+        Token token = getToken(user);
+
+        // TODO 1: Change the above token to a JWT Token
+
+        Token savedToken = tokenRepository.save(token);
+
+        return savedToken;
+    }
+
+    private static Token getToken(User user) {
         LocalDate today = LocalDate.now();
         LocalDate thirtyDaysLater = today.plus(30, ChronoUnit.DAYS);
 
@@ -61,11 +78,9 @@ public class UserService {
         token.setUser(user);
         token.setExpiryAt(expiryDate);
         token.setValue(RandomStringUtils.randomAlphanumeric(128));
-
-        Token savedToken = tokenRepository.save(token);
-
-        return savedToken;
+        return token;
     }
+
     public void logout(String token) {
         Optional<Token> token1 = tokenRepository.findByValueAndDeletedEquals(token, false);
 
@@ -78,6 +93,8 @@ public class UserService {
 
         tkn.setDeleted(true);
         tokenRepository.save(tkn);
+
+        return;
 
     }
 
