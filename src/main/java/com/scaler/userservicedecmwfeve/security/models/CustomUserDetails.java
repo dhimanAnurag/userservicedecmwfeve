@@ -22,6 +22,16 @@ public class CustomUserDetails implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
 
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    private Long userId;
+
 
     public CustomUserDetails() {}
 
@@ -33,6 +43,7 @@ public class CustomUserDetails implements UserDetails {
         this.credentialsNonExpired = true;
         this.password = user.getHashedPassword();
         this.username = user.getEmail();
+        this.userId = user.getId();
 
         List<CustomGrantedAuthority> grantedAuthorities = new ArrayList<>();
 
