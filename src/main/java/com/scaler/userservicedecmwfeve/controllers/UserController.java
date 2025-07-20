@@ -55,5 +55,3 @@ public class UserController {
         return UserDto.from(userService.validateToken(token));
     }
 }
-
-// Break till 10:35
