@@ -54,7 +54,6 @@ public class CustomUserDetails implements UserDetails {
         this.authorities = grantedAuthorities;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 //        List<CustomGrantedAuthority> grantedAuthorities = new ArrayList<>();

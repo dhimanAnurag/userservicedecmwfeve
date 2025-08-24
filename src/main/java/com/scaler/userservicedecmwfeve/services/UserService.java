@@ -1,10 +1,14 @@
 package com.scaler.userservicedecmwfeve.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.scaler.userservicedecmwfeve.dtos.SendEmailEventDto;
 import com.scaler.userservicedecmwfeve.models.Token;
 import com.scaler.userservicedecmwfeve.models.User;
 import com.scaler.userservicedecmwfeve.repositories.TokenRepository;
 import com.scaler.userservicedecmwfeve.repositories.UserRepository;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,13 +25,19 @@ public class UserService {
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private TokenRepository tokenRepository;
+    private KafkaTemplate<String, String> kafkaTemplate;
+    private ObjectMapper objectMapper;
 
     public UserService(UserRepository userRepository,
                        BCryptPasswordEncoder bCryptPasswordEncoder,
-                       TokenRepository tokenRepository) {
+                       TokenRepository tokenRepository,
+                       KafkaTemplate<String, String> kafkaTemplate,
+                       ObjectMapper objectMapper) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.tokenRepository = tokenRepository;
+        this.kafkaTemplate = kafkaTemplate;
+        this.objectMapper = objectMapper;
     }
 
     public User signUp(String fullName,
@@ -39,7 +49,21 @@ public class UserService {
         u.setHashedPassword(bCryptPasswordEncoder.encode(password));
 
         User user = userRepository.save(u);
+        SendEmailEventDto sendEmailEvent = new SendEmailEventDto();
+        sendEmailEvent.setTo(email);
+        sendEmailEvent.setFrom("recruiter@google.com");
+        sendEmailEvent.setSubject("Welcome to google");
+        sendEmailEvent.setBody("Welcome to google and I will like you to join my team as a director of software engineer");
 
+        try {
+            kafkaTemplate.send(
+                    "sendEmail",
+                    objectMapper.writeValueAsString(sendEmailEvent)
+
+            );
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
         return user;
     }
 
